@@ -149,7 +149,7 @@ WAR Packaging
 
 ⚙️ How to Run the Project
 
-1️⃣ Clone the repository: 
+1️⃣ Clone the repository: https://github.com/CodeConstructors1/Java-Online-Quiz-Platform.git
 
 2️⃣ Configure database: Update DBConnection.java or connection pool (if improved version is used):
 
