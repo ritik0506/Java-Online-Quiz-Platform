@@ -160,3 +160,30 @@ quiz-platform/
 │  │  │  └─ quiz_result.jsp
 │  └─ test/
 ├─ README.md
+
+### ⚙ How to Run the Project
+
+⿡ Clone the repository: https://github.com/CodeConstructors1/Java-Online-Quiz-Platform.git
+
+⿢ Configure database: Update DBConnection.java or connection pool (if improved version is used):
+
+jdbc:mysql://localhost:3306/quiz_platform
+
+user=root
+
+password=
+
+⿣ Build project: mvn clean package
+
+⿤ Deploy WAR file:
+
+Deploy quiz-platform-full.war to:
+
+Apache Tomcat 9/10
+
+Jetty
+
+Any Java EE servlet container
+
+⿥ Access application: http://localhost:8080/quiz-platform-full/
+write full fasicante code for readme file
