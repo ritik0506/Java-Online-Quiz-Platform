@@ -1,199 +1,60 @@
-# Java Online Quiz Platform 🎯
+# Java Online Quiz Platform
 
-A full-featured *Java Web-Based Quiz Platform* built with *Servlets, JSP, JDBC (MySQL)* and clean *MVC architecture*.  
-It supports *Admin, Creator, and Participant* roles and manages the *entire quiz lifecycle* – from creation and approval to attempting and reporting.
+Role-based quiz webapp (Admin/User) built with Java Servlets/JSP, MySQL, and Jetty.
 
----
+## Features
+- Role-based auth: `ADMIN` manages quizzes/questions; `USER` takes quizzes and views scores.
+- Admin UI to create quizzes and add questions.
+- User dashboard with quiz catalog and recent scores.
+- Sample credentials for quick start.
 
-## 🚀 Highlights
+## Prerequisites
+- JDK 17+
+- MySQL (XAMPP MariaDB works). Defaults: host `localhost`, user `root`, no password.
+- Maven (using IntelliJ-bundled Maven: `C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.1.2\plugins\maven\lib\maven3\bin\mvn.cmd`).
 
-- 🔐 Secure authentication with *BCrypt-hashed passwords*
-- 👥 Role-based access: *ADMIN / CREATOR / PARTICIPANT*
-- 🧩 Quiz builder with multiple questions & options
-- ✅ Admin quiz approval workflow
-- ⏱ Timed quiz attempts (client + server enforced)
-- 📊 Attempt history, simple leaderboard & *Chart.js* powered admin dashboard
-- 🧱 Clean *MVC + DAO*-based architecture
-- 🛠 Built with *Maven, deployable as a **WAR* on any servlet container
+## Setup: Database
+1) Ensure MySQL is running (XAMPP: start MySQL).
+2) Apply schema and seed data:
+   - Open PowerShell in project root and run:
+     ```powershell
+     & "C:\xampp\mysql\bin\mysql.exe" -u root < simple_database.sql
+     ```
+   - Confirms `simple_quiz` DB with users (admin/john/jane) and quizzes/questions.
 
----
+## Build
+From project root:
+```powershell
+"C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.1.2\plugins\maven\lib\maven3\bin\mvn.cmd" clean package
+```
+Resulting WAR: `target/quiz.war` (exploded at `target/quiz/`).
 
-### 🛠 Technologies Used
+## Run (Jetty via Maven)
+In project root:
+```powershell
+"C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.1.2\plugins\maven\lib\maven3\bin\mvn.cmd" jetty:run
+```
+- App: http://localhost:8080/quiz/
+- Stop: Ctrl+C in the Jetty terminal.
+- If port 8080 is busy, free it or change Jetty port in `pom.xml` plugin config.
 
-Backend
+## Run from IntelliJ IDEA
+1) Open the project as a Maven project.
+2) Ensure Project SDK = 17.
+3) Maven tool window → Lifecycle: run `clean`, then `package` (optional for dev).
+4) To run: Maven tool window → Plugins → `jetty` → `jetty:run` (or add a Maven Run Configuration with goal `jetty:run`).
+5) Open http://localhost:8080/quiz/.
 
-Java 8+ (or 23 since your pom specifies 23)
+## Login
+- Admin: `admin` / `admin123` → manage quizzes/questions.
+- User: `john` / `password123` (or `jane` / `password123`) → take quizzes and see scores.
 
-Servlet API 4.0.1
+## Notes
+- DB config is in `src/main/java/com/quiz/DB.java` (update URL/user/password if your MySQL differs).
+- Sample data is for demo; replace with secure creds and hashed passwords for production.
+- If you see odd replacement characters, search and remove them (none found in current sources).
 
-JSP 2.3
-
-BCrypt (jbcrypt) for password hashing
-
-JDBC + PreparedStatement
-
-MySQL
-
-HikariCP (Connection Pooling, recommended)
-
-Frontend
-
-HTML, CSS, JSP
-
-JSTL
-
-Chart.js (Admin dashboard chart)
-
-Build Tool
-
-Maven
-
-WAR Packaging
-
-
-## ✨ Features
-
-### 👤 User Management
-
-- Secure login using *BCrypt-hashed passwords*
-- Supported roles:
-  - ADMIN
-  - CREATOR
-  - PARTICIPANT
-- Admin capabilities:
-  - Create, update, delete users
-  - Assign / change roles
-- *Session-based authentication*
-- /admin/* protected via *Servlet Filter*
-- Optional role-based filters (e.g., RoleFilter) can be enabled for fine-grained control
-
----
-
-### 🧱 Quiz Creation (CREATOR)
-
-- Create *quiz metadata*:
-  - Title
-  - Description
-  - Duration (in minutes)
-- Add *unlimited questions* per quiz with:
-  - Question text
-  - Options: *A / B / C / D*
-  - Correct option
-  - Marks per question
-- Created quizzes are saved as *PENDING* and require *Admin approval* before they become visible to participants.
-
----
-
-### ✔ Quiz Approval (ADMIN)
-
-- View all *pending quizzes*
-- *Approve / Reject* quizzes
-  - Approved quizzes become visible to participants
-  - Rejected quizzes can be edited or recreated
-- Manage users and roles
-- *Admin Dashboard*:
-  - Visual stats using *Chart.js* (e.g. number of quizzes, attempts, users, etc.)
-
----
-
-### 🎮 Quiz Taking (Participant)
-
-- View all *approved quizzes*
-- Start quiz → attempt is *recorded in DB*
-- *Timed quiz*:
-  - Client-side countdown (JavaScript timer)
-  - Server-side enforcement of duration for security
-- On submit:
-  - Answers are stored securely in DB
-  - Score is *calculated automatically*
-- Show:
-  - Quiz result
-  - Attempt summary
-
----
-
-### 📊 Reports
-
-- *Attempt history* per participant
-- *Simple leaderboard* (demonstration-level; can be extended)
-- Admin view:
-  - Global statistics
-  - Performance overview via *Chart.js*
-
----
-### ⚙ How to Run the Project
-
-⿡ Clone the repository: https://github.com/CodeConstructors1/Java-Online-Quiz-Platform.git
-
-⿢ Configure database: Update DBConnection.java or connection pool (if improved version is used):
-
-jdbc:mysql://localhost:3306/quiz_platform
-
-user=root
-
-password=
-
-⿣ Build project: mvn clean package
-
-⿤ Deploy WAR file:
-
-Deploy quiz-platform-full.war to:
-
-Apache Tomcat 9/10
-
-Jetty
-
-Any Java EE servlet container
-
-⿥ Access application: http://localhost:8080/quiz-platform-full/
-
-## 🧱 Project Architecture
-
-```bash
-quiz-platform/
-├─ pom.xml
-├─ src/
-│  ├─ main/
-│  │  ├─ java/com/quizapp/
-│  │  │  ├─ dao/
-│  │  │  │  ├─ DBConnection.java
-│  │  │  │  ├─ UserDAO.java
-│  │  │  │  ├─ QuizDAO.java
-│  │  │  │  ├─ QuestionDAO.java
-│  │  │  │  ├─ AttemptDAO.java
-│  │  │  │  └─ AnswerDAO.java
-│  │  │  ├─ model/
-│  │  │  │  ├─ User.java
-│  │  │  │  ├─ Quiz.java
-│  │  │  │  ├─ Question.java
-│  │  │  │  ├─ Attempt.java
-│  │  │  │  └─ Answer.java
-│  │  │  ├─ servlet/
-│  │  │  │  ├─ AuthServlet.java
-│  │  │  │  ├─ AdminServlet.java
-│  │  │  │  ├─ QuizServlet.java
-│  │  │  │  ├─ CreatorServlet.java
-│  │  │  │  └─ ReportServlet.java
-│  │  │  ├─ filter/
-│  │  │  │  ├─ AuthFilter.java
-│  │  │  │  └─ (RoleFilter.java / CsrfFilter.java - optional)
-│  │  │  └─ util/
-│  │  │     ├─ PasswordUtil.java
-│  │  │     └─ other helpers...
-│  │  ├─ webapp/
-│  │  │  ├─ WEB-INF/
-│  │  │  │  ├─ web.xml
-│  │  │  │  └─ jsp/
-│  │  │  │     ├─ admin/dashboard.jsp
-│  │  │  │     ├─ admin/pending.jsp
-│  │  │  │     └─ admin/users.jsp
-│  │  │  ├─ index.jsp
-│  │  │  ├─ login.jsp
-│  │  │  ├─ quizzes.jsp
-│  │  │  ├─ take_quiz_timed.jsp
-│  │  │  └─ quiz_result.jsp
-│  └─ test/
-├─ README.md
-
-
-
+## Troubleshooting
+- MySQL not reachable: ensure service is running and creds match `DB.java`.
+- Port 8080 in use: stop the conflicting process or change Jetty port in `pom.xml`.
+- Build failures about `mvn`: use the bundled Maven path shown above or install Maven globally.
